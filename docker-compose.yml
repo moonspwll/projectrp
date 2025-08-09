@@ -1,0 +1,25 @@
+
+services:
+  # MySQL database service for RAGE MP
+  db:
+    image: mysql:8.0
+    container_name: ragemp_mysql
+    restart: unless-stopped
+    environment:
+      # Root password for the MySQL instance
+      MYSQL_ROOT_PASSWORD: example_root_password
+      # Default database created at startup
+      MYSQL_DATABASE: ragemp
+      # Regular user credentials used by your scripts
+      MYSQL_USER: ragemp_user
+      MYSQL_PASSWORD: strong_password
+    ports:
+      # Expose MySQL on the default port so your host machine or other containers can connect
+      - "3306:3306"
+    volumes:
+      # Persist database contents between container restarts
+      - ./mysql-data:/var/lib/mysql
+      # Run initialization scripts stored in ./mysql-init when the container is first started
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    # Use the native password plugin for compatibility with many clients
+    command: --default-authentication-plugin=mysql_native_password
