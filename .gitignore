@@ -1,2 +1,4 @@
 mysql-data
 ui
+node_modules
+.env

@@ -7,6 +7,15 @@ CREATE TABLE IF NOT EXISTS players (
   username VARCHAR(50) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   email VARCHAR(100) DEFAULT NULL,
+  register_ip VARCHAR(45) DEFAULT NULL,
+  register_user_agent VARCHAR(255) DEFAULT NULL,
+  last_login_ip VARCHAR(45) DEFAULT NULL,
+  last_login_user_agent VARCHAR(255) DEFAULT NULL,
+  last_login_at TIMESTAMP NULL DEFAULT NULL,
+  social_club VARCHAR(100) DEFAULT NULL,
+  serial VARCHAR(128) DEFAULT NULL,
+  hwid_hash VARCHAR(64) DEFAULT NULL,
+  hwid_ex_hash VARCHAR(64) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

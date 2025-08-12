@@ -18,3 +18,17 @@ mp.events.add('hideLogin', () => {
         mp.gui.chat.activate(true);
     }
 });
+
+mp.events.add('client:login', (username, password, userAgent) => {
+    mp.events.callRemote('server:login', username, password, userAgent);
+});
+
+mp.events.add('client:register', (username, password, userAgent) => {
+    mp.events.callRemote('server:register', username, password, userAgent);
+});
+
+mp.events.add('authError', (message) => {
+    if (loginBrowser) {
+        loginBrowser.execute(`window.postMessage({ type: 'authError', message: ${JSON.stringify(message)} }, '*')`);
+    }
+});

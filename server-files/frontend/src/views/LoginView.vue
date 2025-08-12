@@ -23,6 +23,9 @@
             <button type="submit" :disabled="loading">
                 {{ loading ? 'Logging in...' : 'Login' }}
             </button>
+            <button type="button" @click="handleRegister" :disabled="loading">
+                Register
+            </button>
             <p v-if="error" class="error">{{ error }}</p>
         </form>
     </div>
@@ -39,24 +42,31 @@ export default {
             error: "",
         };
     },
+    mounted() {
+        window.addEventListener('message', this.onMessage);
+    },
+    beforeUnmount() {
+        window.removeEventListener('message', this.onMessage);
+    },
     methods: {
-        async handleLogin() {
+        onMessage(event) {
+            if (event.data && event.data.type === 'authError') {
+                this.error = event.data.message;
+                this.loading = false;
+            }
+        },
+        handleLogin() {
             this.error = "";
             this.loading = true;
-            try {
-                // Replace with your actual login API call
-                // Example:
-                // await this.$axios.post('/api/login', { username: this.username, password: this.password });
-                if (this.username === "admin" && this.password === "admin") {
-                    // Simulate successful login
-                    window.mp.events.call("hideLogin");
-                } else {
-                    throw new Error("Invalid username or password");
-                }
-            } catch (err) {
-                this.error = err.message;
-            } finally {
-                this.loading = false;
+            if (window.mp && window.mp.trigger) {
+                window.mp.trigger('client:login', this.username, this.password, navigator.userAgent);
+            }
+        },
+        handleRegister() {
+            this.error = "";
+            this.loading = true;
+            if (window.mp && window.mp.trigger) {
+                window.mp.trigger('client:register', this.username, this.password, navigator.userAgent);
             }
         },
     },
